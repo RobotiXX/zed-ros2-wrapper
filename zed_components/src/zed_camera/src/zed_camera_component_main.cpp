@@ -613,6 +613,9 @@ void ZedCamera::initParameters()
   getDepthParams();
 
   // POS. TRACKING and GNSS FUSION parameters
+  // Read the requested tracking mode before testing the depthless GEN_3
+  // exception. mPosTrkMode initially contains GEN_1, not the YAML override.
+  getPosTrackingParams();
 #if (ZED_SDK_MAJOR_VERSION * 10 + ZED_SDK_MINOR_VERSION) >= 52
   // With ZED SDK v5.2 we can use Positional Tracking `GEN_3` even if depth is
   // disabled
@@ -620,9 +623,6 @@ void ZedCamera::initParameters()
 #else
   if (!mDepthDisabled) {
 #endif
-    // Positional Tracking parameters
-    getPosTrackingParams();
-
     if (mPosTrackingEnabled) {
       // GNSS Fusion parameters
       getGnssFusionParams();
